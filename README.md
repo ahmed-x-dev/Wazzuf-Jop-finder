@@ -9,14 +9,14 @@ their internal API.
 - Company extraction
 - HTML cleaning
 - Description truncation
-- Pandas DataFrame output
+- CSV, Excel outputs
 
 ## Technologies
 - Python
 - Requests
 - Pandas
 - BeautifulSoup
-
+- openpyxl
 ## Usage
 ```bash
 pip install -r requirements.txt

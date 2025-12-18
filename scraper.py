@@ -10,11 +10,11 @@ output_dir = Path("log")
 output_dir.mkdir(exist_ok=True)
 
 logging.basicConfig(
-    level=logging.INFO, # Capture INFO and everything more serious (Warning, Error, Critical)
-    format='%(asctime)s - %(levelname)s - %(message)s', # The "Look" of the log
+    level=logging.INFO, # Capture 
+    format='%(asctime)s - %(levelname)s - %(message)s', # log formate
     handlers=[
         logging.FileHandler("log/scraper.log"), # Save to a file
-        logging.StreamHandler()            # Also show in the terminal
+        logging.StreamHandler()            #  show in the terminal
     ]
 )
 
@@ -33,11 +33,11 @@ class WazzufScraper():
         }
         self.PAGE_SIZE = 15
         self.BATCH_SIZE = 10
-        self.DELAY = 1  # seconds between requests
+        self.DELAY = 0.5  # seconds between requests
         self.MAX_PAGES = max_pages  # maximum number of pages to scrape
-        self.MAX_DESC_LENGTH = 100  # truncate description
+        self.MAX_DESC_LENGTH = 100  # truncate description, requirements
 
-        # ---------- Step 1: Collect job IDs and companies ----------
+        # ---------- Collect job IDs and companies ----------
         self.all_job_ids = []
         self.all_companies = []
         self.start_index = 0
@@ -86,11 +86,11 @@ class WazzufScraper():
 
         logging.info(f"Total job IDs collected: {len(self.all_job_ids)}")
 
-# ---------- Step 2: Fetch full job details ----------
+# ---------- Fetch full job details ----------
 
     def fetch_job_details(self):
         for i in range(0, len(self.all_job_ids), self.BATCH_SIZE):
-            batch_ids = self.all_job_ids[i:i+self.BATCH_SIZE]
+            batch_ids = self.all_job_ids[i:i+self.BATCH_SIZE] # first 10 IDs
             api_url = self.JOB_API + ",".join(batch_ids)
 
             try:
@@ -125,7 +125,7 @@ class WazzufScraper():
                     "work_type": ", ".join([wt.get("displayedName", "") for wt in attrs.get("workTypes", [])]),
                     "posted_at": attrs.get("postedAt", ""),
                     "expire_at": attrs.get("expireAt", ""),
-                    "jop_url": f"https://wuzzuf.net/{attrs.get("uri","")}",
+                    "jop_url": f"https://wuzzuf.net/{attrs.get('uri','')}",
                     "redirect_url": attrs.get("redirectUrl", "")
                 }
                 self.all_jobs.append(job_info)
@@ -135,7 +135,7 @@ class WazzufScraper():
 
     def save_to_csv(self):
 
-        # ---------- Step 3: Save to pandas DataFrame ----------
+        # ---------- Save to CSV, Excel ----------
         df = pd.DataFrame(self.all_jobs)
 
         # Convert date fields to datetime
@@ -148,11 +148,21 @@ class WazzufScraper():
         output_dir = Path("output")
         output_dir.mkdir(exist_ok=True)
 
-        df.to_csv(output_dir / "wuzzuf_jobs.csv", index=False, encoding="utf-8")
-        logging.info("All job details saved to output/wuzzuf_jobs.csv")
+        try:
+
+            df.to_csv(output_dir / "csv_wuzzuf_jobs.csv", index=False, encoding="utf-8")
+            df.to_excel(output_dir / "excel_wuzzuf_jobs.xlsx", index=False,)
+        except Exception as e:
+            logging.error(f"Error saving CSV or Excel: {e}")
+            return
 
 
-        # Optional preview
+        logging.info("All job details saved to CSV and Excel in output folder")
+
+
+
+
+        # terminal preview
         print(df.head())
 
     def run(self):
@@ -185,5 +195,5 @@ class WazzufScraper():
     
 if __name__ == "__main__":
     # You can now easily change settings here!
-    scraper = WazzufScraper(max_pages=10)
+    scraper = WazzufScraper(max_pages=50)
     scraper.run()
