@@ -115,16 +115,16 @@ class WazzufScraper():
                 job_info = {
                     # "id": job.get("id", ""),
                     "title": attrs.get("title", ""),
-                    "description": description,
-                    # "requirements": requirements,
-                    "company": company_name,
                     "city": attrs.get("location", {}).get("city", {}).get("name", ""),
                     "country": attrs.get("location", {}).get("country", {}).get("name", ""),
-                    "keywords": ", ".join([kw.get("name", "") for kw in attrs.get("keywords", [])]),
+                    "company": company_name,
                     "career_level": attrs.get("careerLevel", {}).get("name", ""),
                     "work_type": ", ".join([wt.get("displayedName", "") for wt in attrs.get("workTypes", [])]),
                     "posted_at": attrs.get("postedAt", ""),
                     "expire_at": attrs.get("expireAt", ""),
+                    "description": description,
+                    "requirements": requirements,
+                    "keywords": ", ".join([kw.get("name", "") for kw in attrs.get("keywords", [])]),
                     "jop_url": f"https://wuzzuf.net/{attrs.get('uri','')}",
                     "redirect_url": attrs.get("redirectUrl", "")
                 }
