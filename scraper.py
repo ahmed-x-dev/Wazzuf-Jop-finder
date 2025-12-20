@@ -116,7 +116,7 @@ class WazzufScraper():
                     # "id": job.get("id", ""),
                     "title": attrs.get("title", ""),
                     "description": description,
-                    "requirements": requirements,
+                    # "requirements": requirements,
                     "company": company_name,
                     "city": attrs.get("location", {}).get("city", {}).get("name", ""),
                     "country": attrs.get("location", {}).get("country", {}).get("name", ""),
@@ -163,7 +163,7 @@ class WazzufScraper():
 
 
         # terminal preview
-        print(df.head())
+        # print(df.head())
 
     def run(self):
         self.fetch_job_ids()
@@ -195,5 +195,5 @@ class WazzufScraper():
     
 if __name__ == "__main__":
     # You can now easily change settings here!
-    scraper = WazzufScraper(max_pages=50)
+    scraper = WazzufScraper(max_pages=10)
     scraper.run()
